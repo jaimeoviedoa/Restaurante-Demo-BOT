@@ -9,7 +9,7 @@ app.use(express.json());
 
 const PORT = process.env.PORT || 3000;
 
-// 🔐 VERIFY TOKEN (puedes cambiarlo si quieres)
+// 🔐 VERIFY TOKEN
 const VERIFY_TOKEN = "lumo_token";
 
 // 👉 GET webhook (verificación Meta)
@@ -44,22 +44,72 @@ app.post("/webhook", async (req, res) => {
 
       console.log("Usuario dice:", text);
 
-      // 💬 RESPUESTA AUTOMÁTICA SIMPLE
-      let responseText = "No entendí tu mensaje 🤔";
+      let responseText = "";
 
       if (text) {
         const lowerText = text.toLowerCase();
 
-        if (lowerText.includes("hola")) {
-          responseText = "Hola 👋 soy *PB bot 1.0* 🤖\n\nBienvenido a nuestro restaurante 🍽️\n\n¿Quieres ver el menú o hacer una reserva?";
-        } else if (lowerText.includes("menu")) {
-          responseText = "🍽️ *MENÚ*\n\n- Pizza 🍕\n- Pasta 🍝\n- Hamburguesa 🍔\n\nEscribe *pedido* para ordenar";
-        } else if (lowerText.includes("reserva")) {
-          responseText = "📅 Para reservas indícanos:\n\n- Día\n- Hora\n- Número de personas";
-        } else if (lowerText.includes("pedido")) {
-          responseText = "🛒 ¿Qué deseas pedir?\n\nEjemplo: 'Quiero una pizza'";
-        } else {
-          responseText = `👀 Recibí: "${text}"\n\nEscribe *menu* para ver opciones`;
+        // 👋 SALUDO
+        if (lowerText === "hola" || lowerText.includes("hola")) {
+          responseText = `👋 Bienvenido a *PB Restaurant*
+
+¿Qué deseas hacer?
+
+1️⃣ Ver menú  
+2️⃣ Hacer pedido  
+3️⃣ Hablar con humano`;
+        }
+
+        // 📋 VER MENÚ
+        else if (lowerText === "1" || lowerText.includes("menu")) {
+          responseText = `🍕 *MENÚ*
+
+1️⃣ Pizza - 10€  
+2️⃣ Hamburguesa - 8€  
+3️⃣ Pasta - 9€
+
+Responde con el número del producto`;
+        }
+
+        // 🍕 SELECCIÓN DE PRODUCTO
+        else if (lowerText === "1") {
+          responseText = `🍕 Has elegido *Pizza*
+
+¿Cuántas deseas?`;
+        }
+
+        else if (lowerText === "2") {
+          responseText = `🍔 Has elegido *Hamburguesa*
+
+¿Cuántas deseas?`;
+        }
+
+        else if (lowerText === "3") {
+          responseText = `🍝 Has elegido *Pasta*
+
+¿Cuántas deseas?`;
+        }
+
+        // 🛒 HACER PEDIDO (placeholder)
+        else if (lowerText.includes("pedido")) {
+          responseText = `🛒 Para hacer un pedido:
+
+1️⃣ Ver menú  
+2️⃣ Elegir producto  
+
+Empieza escribiendo *1*`;
+        }
+
+        // 👤 HUMANO
+        else if (lowerText === "3" || lowerText.includes("humano")) {
+          responseText = `👤 Te contactaremos con un humano en breve`;
+        }
+
+        // ❓ DEFAULT
+        else {
+          responseText = `😅 No entendí tu mensaje
+
+Escribe *hola* para comenzar`;
         }
       }
 
